@@ -1,6 +1,7 @@
 from time import time
 import json
 import hashlib
+from urllib.parse import urlparse
 
 class Blockchain(object):
     def __init__(self):
@@ -9,6 +10,9 @@ class Blockchain(object):
 
         # genesis block creation
         self.new_block(previous_hash=1, proof=100)
+
+        # for nodes
+        self.nodes = set()
 
 
     # Create a new Block in the Blockchain
@@ -72,3 +76,9 @@ class Blockchain(object):
         guess = f'{last_proof}{proof}'.encode()
         guess_hash = hashlib.sha256(guess).hexdigest()
         return guess_hash[:4] == "0000"
+
+    # Add a new node to the list of nodes
+
+    def register_node(self, address):
+        parsed_url = urlparse(address)
+        self.nodes.add(parsed_url.netloc)
