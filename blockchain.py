@@ -36,13 +36,10 @@ class Blockchain(object):
         return block
 
 
-    # Creates a new transaction to go into the next mined Block
-    def new_transaction(self, sender, recipient, amount):
+    def new_transaction(self, msg):
 
         self.current_transactions.append({
-            'sender': sender,
-            'recipient' : recipient,
-            'amount' : amount
+            'msg': msg
         })
         return self.last_block['index'] + 1
 
@@ -58,7 +55,14 @@ class Blockchain(object):
     def last_block(self):
         return self.chain[-1]
 
+    # Return the chain of transactions from a current index
+    def chain_since_index(self, index):
+        return {"msgs" : [item for sublist in self.chain[index:] for item in sublist['transactions']], "new_index" : self.last_block['index'] }
 
+    # get current index of chain
+    @property
+    def chain_index(self):
+        return self.last_block['index']
 
     # Simple POW algorithm
     def proof_of_work(self, last_proof):
