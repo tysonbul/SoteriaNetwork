@@ -59,9 +59,10 @@ class Blockchain(object):
     def chain_since_index(self, index):
         return {"msgs" : [item for sublist in self.chain[index:] for item in sublist['transactions']], "new_index" : self.last_block['index'] }
 
+
     # get current index of chain
     @property
-    def chain_index(self):
+    def curr_chain_index(self):
         return self.last_block['index']
 
     # Simple POW algorithm

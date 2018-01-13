@@ -120,6 +120,10 @@ def transactions_since(index):
     return jsonify(txns)
 
 
+@app.route('/transactions/init', methods=['GET'])
+def tranactions_init():
+    return blockchain.curr_chain_index
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
