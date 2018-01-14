@@ -11,8 +11,15 @@ const styles = StyleSheet.create({
   },
 
   splashText:{
-    color: 'blue'
-  }
+    color: 'white',
+    fontSize: 35
+  },
+  linearGradient: {
+    flex: 1,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5
+  },
 });
 
 

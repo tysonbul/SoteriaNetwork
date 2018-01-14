@@ -3,6 +3,8 @@ import { AsyncStorage, StyleSheet, TouchableHighlight, ActivityIndicator, ListVi
 import {StackNavigator, NavigationActions} from 'react-navigation';
 import styles from './styles';
 import KeyPair from './crypt';
+import { Components ,LinearGradient, Font} from 'expo';
+import FontAwesome, { Icons } from 'react-native-fontawesome';
 // import CacheStore from 'react-native-cache-store';
 // import store from 'react-native-simple-store';
 // var safeObject = require('safeObject')
@@ -23,10 +25,15 @@ export default class SplashScreen extends Component {
     super(props);
     this.state = {
       isLoading: true,
+      fontLoaded: false,
     }
   };
 
-  componentDidMount(){
+  async componentDidMount(){
+    await Font.loadAsync({
+      'RobotoSlab': require('./Fonts/Cabin-Regular.ttf'),
+    });
+    this.setState({ fontLoaded: true });
     this.fetchKeys();
   }
 
@@ -80,11 +87,23 @@ export default class SplashScreen extends Component {
   render() {
     //if (this.state.isLoading) {
       return (
-        <View style={styles.container}>
-          <Text style={styles.splashText}>
-            Soteria
-          </Text>
-        </View>
+        <View style={{ flex: 1 }}>
+       <View style={{ backgroundColor: 'rgba(51,255,186,1) ', flex: 1 }} />
+       <LinearGradient
+         colors={['rgb(130, 255, 238)', 'transparent']}
+         style={{
+           position: 'absolute',
+           left: 0,
+           right: 0,
+           top: 0,
+           height: 300,
+           alignItems: 'center',
+           justifyContent: 'center',
+         }}
+       >
+       {this.state.fontLoaded ? (<Text style={styles.splashText, {fontFamily: 'RobotoSlab', color: 'white', fontSize:35}}>Soteria</Text>) : null}
+     </LinearGradient>
+     </View>
       );
     //}
 
