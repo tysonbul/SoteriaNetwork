@@ -3,11 +3,13 @@ import { StyleSheet, TouchableHighlight, TouchableOpacity, ActivityIndicator, Li
 import {StackNavigator, NavigationActions} from 'react-navigation';
 import styles from './styles';
 import { Constants, Camera, FileSystem, Permissions, takeSnapshotAsync } from 'expo';
-import { uuid } from './App';
-import { MICROSOFT_KEY } from './config'
-
+import {uuid} from './App';
 
 const landmarkSize = 2;
+const endpoint = "https://westcentralus.api.cognitive.microsoft.com/face/v1.0";
+const key1 = "2b6eb38dbc4744db9b0b13cce8d36449";
+const key2 = "26e20ee52db64acb82339b62cf926939";
+
 
 const flashModeOrder = {
     off: 'on',
@@ -79,7 +81,7 @@ const wbOrder = {
   };
 
 
-export default class FaceDetection extends Component {
+export default class PersonGroup extends Component {
 
     
     // state = {
@@ -146,13 +148,14 @@ export default class FaceDetection extends Component {
         showGallery: false,
         photos: [],
         faces: [],
-        permissionsGranted: false
+        permissionsGranted: false,
+        personGroupName: uuid,
+        personId: ''
     };
     
       async componentWillMount() {
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-        console.log(uuid)
-
+        console.log("CREATE PROFILE")
         this.setState({ permissionsGranted: status === 'granted' });
       }
     
@@ -227,10 +230,58 @@ export default class FaceDetection extends Component {
         //  var data = new FormData();
         //  data.append('file ', photo);
 
+
+        if (this.state.personId == '') {
+          console.log(this.state.personGroupName)
+          let responseGroupCreate = await fetch(
+            'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/persongroups/'+this.state.personGroupName, {
+              method: 'PUT',
+              headers: {
+                'Ocp-Apim-Subscription-Key':MICROSOFT_KEY,
+                //'Content-Type':'application/json'
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              'name' : this.state.personGroupName
+            })
+          });
+          try {
+            let responseGroupCreateJson = await responseGroupCreate.json();
+            console.log(responseGroupCreateJson);
+
+          }
+          catch (error) {
+            console.log("this is error: " + error);
+          }
+
+          let responseCreate = await fetch(
+            'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/persongroups/'+this.state.personGroupName+'/persons/', {
+                method: 'POST',
+                headers: {
+                    'Ocp-Apim-Subscription-Key':MICROSOFT_KEY,
+                    //'Content-Type':'application/json'
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'name' : this.state.personGroupName
+                })
+                //body: Base64.convertToByteArray(photoData)
+  
+            });
+  
+          let responseJsonCreate = await responseCreate.json();
+          this.state.personId = responseJsonCreate['personId']
+          console.log("NEW PERSON ID CREATED: " + this.state.personId);
+        }
+
+        else {
+          console.log("USING PERSON ID: " + this.state.personId);
+        }
         
+          
 
           let response = await fetch(
-            'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect', {
+            'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/persongroups/'+this.state.personGroupName+'/persons/'+this.state.personId+'/persistedFaces', {
                 method: 'POST',
                 headers: {
                     'Ocp-Apim-Subscription-Key':MICROSOFT_KEY,
@@ -245,31 +296,10 @@ export default class FaceDetection extends Component {
             });
 
           let responseJson = await response.json();
-          console.log(responseJson[0])
-          var faceId = responseJson[0]['faceId']
-          console.log(faceId);
-
-          let responseIdentify = await fetch(
-            'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/identify', {
-                method: 'POST',
-                headers: {
-                    'Ocp-Apim-Subscription-Key':MICROSOFT_KEY,
-                    //'Content-Type':'application/json'
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    'personGroupId' : uuid,
-                    "faceIds" : [faceId],
-                })
-                //body: Base64.convertToByteArray(photoData)
-
-            });
-
-          let responseJsonIdentify = await responseIdentify.json();
-          console.log(responseJsonIdentify);
+          console.log(responseJson);
 
         } catch (error) {
-          console.error(error);
+          console.log(error);
         }
       }
 
@@ -497,6 +527,8 @@ export default class FaceDetection extends Component {
           ? this.renderCamera()
           : this.renderNoPermissions();
         const content = cameraScreenContent;
-        return <View style={styles.container}>{content}</View>;
+        return <View style={styles.container}>{content}
+        
+        </View>;
       }
 }
