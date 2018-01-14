@@ -1,4 +1,5 @@
-var sjcl = require('./sjcl.js')
+var sjcl = require('sjcl')
+
 
 // Generate a new pub/sec key pair, only called once
 function KeyPair(){
@@ -31,7 +32,7 @@ KeyPair.prototype.SignMsg = function(msg){
 // Verify a msg using receivers pub key
 KeyPair.prototype.VerifyMsg = function(msg){
     var verMsg = pub.verify(sjcl.hash.sha256.hash(msg), sig)
-    
+
     return verMsg;
 }
 
@@ -48,3 +49,5 @@ KeyPair.prototype.SendMsg = function(msg, pub){
 
     return encMsg;
 }
+
+module.exports = KeyPair;
