@@ -23,7 +23,7 @@ export default class Message extends Component {
     static navigationOptions = ({ navigation }) =>{
         const { params = {} } = navigation.state;
         return {
-            title: 'Contact Name'
+            title: params
             }
     }
     
