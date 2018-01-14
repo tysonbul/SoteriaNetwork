@@ -12,6 +12,8 @@ import Home from './HomeScreen';
 import Message from './MessageScreen';
 
 export const server_address = 'http://10.110.26.134:5001';
+import {createStore, applyMiddleware} from 'redux';
+import { Provider, connect } from 'react-redux'
 
 function guid() {
   function s4() {
@@ -28,6 +30,7 @@ console.log(uuid)
 
 
 const AppNav = StackNavigator({
+  Splash: {screen: SplashScreen},
   Home: { screen: Home },
   AddContact: { screen: AddContact },
   QRCodeScanner: { screen: QRCodeScannerScreen },

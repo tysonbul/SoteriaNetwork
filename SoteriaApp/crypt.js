@@ -1,12 +1,21 @@
-var sjcl = require('sjcl')
+var sjcl = require('./sjcl.js')
 
+// UUID generating function
+function uuidv4() {
+ return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+   var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+   return v.toString(16);
+ });
+}
 
 // Generate a new pub/sec key pair, only called once
 function KeyPair(){
-    var pair = sjcl.ecc.elGamal.generateKeys(256)
+    var pair = sjcl.ecc.elGamal.generateKeys(sjcl.ecc.curves.k256)
     this.pair = pair;
-    this.userDict = []
+    this.uuid = uuidv4();
+    this.userDict = [];
 }
+
 
 // Encrypt and send message using receivers pub key
 KeyPair.prototype.EncryptMsg = function(msg, pub){
@@ -48,6 +57,36 @@ KeyPair.prototype.SendMsg = function(msg, pub){
     encMsg = KeyPair.EncryptMsg(msg, pub)
 
     return encMsg;
+}
+
+// SERIALIZATION //
+
+// Serialize public key
+KeyPair.prototype.SerializePublicKey = function(){
+  var pub = this.pair.pub.get();
+  return sjcl.codec.base64.fromBits(pub.x.concat(pub.y));
+}
+
+// Unserialized public key
+KeyPair.prototype.UnserializePublicKey = function(pub){
+  return new sjcl.ecc.elGamal.publicKey(
+    sjcl.ecc.curves.k256,
+    sjcl.codec.base64.toBits(pub)
+)
+}
+
+// Serialize public key
+KeyPair.prototype.SerializeSecretKey = function(){
+  var sec = this.pair.sec.get();
+  return sjcl.codec.base64.fromBits(sec)
+}
+
+// Unserialized public key
+KeyPair.prototype.UnserializeSecretKey = function(sec){
+  return new sjcl.ecc.elGamal.secretKey(
+    sjcl.ecc.curves.k256,
+    sjcl.ecc.curves.k256.field.fromBits(sjcl.codec.base64.toBits(sec))
+)
 }
 
 module.exports = KeyPair;
