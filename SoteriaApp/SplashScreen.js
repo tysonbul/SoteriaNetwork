@@ -2,7 +2,7 @@ import React, { Component, } from 'react';
 import { StyleSheet, TouchableHighlight, ActivityIndicator, ListView, Text, View, StatusBar, Button, TextInput } from 'react-native';
 import {StackNavigator, NavigationActions} from 'react-navigation';
 import styles from './styles';
-import KeyPair from './crypt'
+// import KeyPair from './crypt'
 
 
 
