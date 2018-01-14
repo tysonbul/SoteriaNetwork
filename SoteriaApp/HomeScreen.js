@@ -66,7 +66,8 @@ export default class Home extends Component {
           const serPub = await AsyncStorage.getItem('serPub');
           const serSec = await AsyncStorage.getItem('serSec');
           const uuid = await AsyncStorage.getItem('uuid');
-          const userDict = await AsyncStorage.getItem('userDict');
+          const userArray = await AsyncStorage.getItem('userDict');
+          let userDict = JSON.parse(userArray);
           console.log(serPub);
           console.log(serSec);
           this.setState({

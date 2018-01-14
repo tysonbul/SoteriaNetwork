@@ -32,11 +32,11 @@ export default class SplashScreen extends Component {
 
   async fetchKeys(){
     try{
-      let keys = ['serPub','serSec', 'uuid', 'userDict']
-      AsyncStorage.multiRemove(keys,(error)=>{
+      let keys = ['serPub','serSec', 'uuid', 'userDict'];
+      await AsyncStorage.multiRemove(keys,(error)=>{
         console.log("clear error");
         console.log(error);
-      })
+      });
       const serPub = await AsyncStorage.getItem('serPub');
       const serSec = await AsyncStorage.getItem('serSec');
       const uuid = await AsyncStorage.getItem('uuid');
@@ -55,13 +55,14 @@ export default class SplashScreen extends Component {
 
   GenerateUser(){
      var a = new KeyPair();
-     console.log(a.userDict)
+     console.log(a.userDict);
      var serSec = a.SerializeSecretKey();
      var serPub = a.SerializePublicKey();
+     var userArray = JSON.stringify(a.userDict);
      AsyncStorage.setItem('serPub', serPub);
      AsyncStorage.setItem('serSec', serSec);
      AsyncStorage.setItem('uuid', a.uuid);
-     AsyncStorage.setItem('userDict', a.userDict);
+     AsyncStorage.setItem('userDict', userArray);
   }
 
 
