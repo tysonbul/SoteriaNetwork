@@ -32,9 +32,14 @@ export default class SplashScreen extends Component {
 
   async fetchKeys(){
     try{
-      const serPub = null;
-      const serSec = null;
-      const uuid = null;
+      let keys = ['serPub','serSec', 'uuid', 'userDict']
+      AsyncStorage.multiRemove(keys,(error)=>{
+        console.log("clear error");
+        console.log(error);
+      })
+      const serPub = await AsyncStorage.getItem('serPub');
+      const serSec = await AsyncStorage.getItem('serSec');
+      const uuid = await AsyncStorage.getItem('uuid');
       console.log(serPub);
       console.log(serSec);
       if(serPub == null || serSec == null || uuid == null){
