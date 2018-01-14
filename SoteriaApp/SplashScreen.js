@@ -28,6 +28,10 @@ export default class SplashScreen extends Component {
     })
   }
 
+  home = () => {
+    this.props.navigation.navigate('NewHome');
+  }
+
   qrCodeDisplay = (publickey) => {
     this.props.navigation.navigate('QRCodeDisplay', publickey);
   }
@@ -56,6 +60,10 @@ export default class SplashScreen extends Component {
         <Text style={styles.splashText}>
           Soteria
         </Text>
+        <Button
+          onPress={this.home.bind(this)}
+          title="Home"
+        />
         <Button
           onPress={this.GenerateKey.bind(this)}
           title="Generate Public Key"
