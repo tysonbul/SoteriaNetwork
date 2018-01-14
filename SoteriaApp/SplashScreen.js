@@ -33,6 +33,10 @@ export default class SplashScreen extends Component {
   }
 
 
+  detectFace = () => {
+    this.props.navigation.navigate('FaceDetection')
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -51,6 +55,10 @@ export default class SplashScreen extends Component {
         <Button
           onPress={this.GenerateKey.bind(this)}
           title="Generate Public Key"
+        />
+        <Button
+          onPress={this.detectFace.bind(this)}
+          title="Detect face"
         />
 
       </View>
