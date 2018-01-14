@@ -11,14 +11,15 @@ import {
     Button,
     ListView,
     TouchableHighlight,
-    StatusBar, 
+    StatusBar,
     AsyncStorage
 } from 'react-native';
 
 export default class Home extends Component {
-    
+
     static navigationOptions = ({ navigation }) =>{
         const { params = {} } = navigation.state;
+        headerLeft: null;
         return {
             title: 'Sorteria Messenger',
             headerRight: (<Button
@@ -26,8 +27,10 @@ export default class Home extends Component {
                 title='Add Contact'
                 />)
             }
+            headerLeft: null
+
     }
-    
+
     constructor(props) {
         super(props);
         let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -79,17 +82,17 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
-  
+
     row: {
       color: 'black',
       textAlign: 'center'
     },
-  
+
     buttonWrapper: {
       flexDirection: 'row',
       justifyContent: 'space-around',
     },
-  
+
     button:{
       backgroundColor: '#fff',
       justifyContent: 'center',
@@ -100,19 +103,19 @@ const styles = StyleSheet.create({
       borderBottomColor: '#d9d9d9',
       borderBottomWidth: 1
     },
-  
+
     centerText:{
       textAlign: 'center'
     },
-  
+
     StatusBarColor:{
       backgroundColor:'#f4a041'
     },
-  
+
     Option:{
       paddingBottom: 15,
     },
-  
+
     transationDetailRow:{
       flexDirection:'row',
       justifyContent:'space-between',

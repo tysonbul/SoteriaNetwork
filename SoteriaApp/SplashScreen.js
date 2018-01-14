@@ -36,12 +36,11 @@ export default class SplashScreen extends Component {
       console.log(serSec);
       if(serPub == null || serSec == null){
         this.GenerateKey();
+
       }
     }catch(error){};
 
-    this.setState({
-      isLoading: false
-    })
+    this.toHomeScreen();
   }
 
 
@@ -56,8 +55,19 @@ export default class SplashScreen extends Component {
   }
 
 
+  toHomeScreen = () => {
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({ routeName: 'Home'})
+      ]
+    })
+    this.props.navigation.dispatch(resetAction)
+  }
+
+
   render() {
-    if (this.state.isLoading) {
+    //if (this.state.isLoading) {
       return (
         <View style={styles.container}>
           <Text style={styles.splashText}>
@@ -65,14 +75,7 @@ export default class SplashScreen extends Component {
           </Text>
         </View>
       );
-    }
-    return (
-      <View style={styles.container}>
-        <Text style={styles.splashText}>
-          Soteria
-        </Text>
-      </View>
-    );
+    //}
 
 
   }
