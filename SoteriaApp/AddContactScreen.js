@@ -45,7 +45,10 @@ export default class AddContact extends Component {
     let contactName = this.state.contactName;
     let contactAddress = this.state.contactAddress;
 
-    let user = {contactName: contactAddress}
+    let user = {
+      "contactName": contactName,
+      "contactAddress": contactAddress
+        }
     this.saveUserDict(user);
 
 
@@ -53,10 +56,12 @@ export default class AddContact extends Component {
 
   async saveUserDict(newUser){
     try{
-      var userDict = await AsyncStorage.getItem('userDict');
+      let userArray = await AsyncStorage.getItem('userDict');
+      let userDict = JSON.parse(userArray);
       console.log(userDict)
       userDict.push(newUser);
-      AsyncStorage.setItem('userDict', userDict);
+      userArray = JSON.stringify(userDict)
+      AsyncStorage.setItem('userDict', userArray);
     }catch(error){
       console.log(error)
     }
