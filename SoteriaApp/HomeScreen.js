@@ -11,7 +11,8 @@ import {
     Button,
     ListView,
     TouchableHighlight,
-    StatusBar
+    StatusBar, 
+    AsyncStorage
 } from 'react-native';
 
 export default class Home extends Component {
@@ -37,17 +38,21 @@ export default class Home extends Component {
           };
     };
 
+    _getSerializedPublicKey(){
+      /* Add code to get serialized public key from storage*/
+      return '0xf2369873297856';
+    }
+
     _addContact = (publickey) => {
-        this.props.navigation.navigate('QRCodeDisplay', publickey);
+        this.props.navigation.navigate('AddContact', this._getSerializedPublicKey());
       }
 
     _goToMessages(){
-        console.log('hii going to messages');
+      this.props.navigation.navigate('Message');
     }
 
     componentDidMount() {
         this.props.navigation.setParams({ addContact: this._addContact.bind(this) });
-        // return this.fetchPortfolio();
       };
 
     render() {

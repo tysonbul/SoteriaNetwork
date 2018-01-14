@@ -39,10 +39,15 @@ export default class QRCodeScannerScreen extends Component {
     });
   };
 
+  _unserializePublicKey(data){
+    /** To be filled in with crypto code */
+    return data
+  }
+
   _handleBarCodeRead = result => {
     const { navigation } = this.props;
     navigation.goBack();
-    navigation.state.params.onSelect({ contactAddress: result.data });
+    navigation.state.params.onSelect({ contactAddress: this._unserializePublicKey(result.data) });
   };
 
   render() {

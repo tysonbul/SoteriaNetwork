@@ -13,7 +13,7 @@ import {
     Button
 } from 'react-native';
  
-export default class QRCodeComp extends Component {
+export default class AddContact extends Component {
 
     static navigationOptions = ({ navigation }) => ({
         title: 'Add Contact',
@@ -28,9 +28,22 @@ export default class QRCodeComp extends Component {
     };
   };
 
+  _unserializePublicKey(data){
+    /* To be filled in with serialization code*/ 
+    return data
+  }
+
   onSelect = data => {
     this.setState(data);
   };
+
+  saveContactInfo(){
+    /* Add code that saves the contact info */
+    contactName = this.state.contactName;
+    contactAddress = this.state.contactAddress;
+    // however you save the values...
+    
+  }
 
   _scanQR(){
     this.props.navigation.navigate('QRCodeScanner', { onSelect: this.onSelect });
@@ -73,7 +86,7 @@ export default class QRCodeComp extends Component {
           <Button 
             title='Add Contact'
             disabled={this.state.contactAddress == ''}
-            onPress={()=>{}}
+            onPress={()=>{this.saveContactInfo.bind(this)}}
           />
       </View>
     );

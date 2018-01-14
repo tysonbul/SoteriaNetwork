@@ -4,17 +4,19 @@ import styles from './styles'
 import CacheStore from 'react-native-cache-store';
 import {StackNavigator, NavigationActions} from 'react-navigation';
 import SplashScreen from './SplashScreen';
-import QRCodeDisplay from './QRCodeDisplay';
+import AddContact from './AddContactScreen';
 import QRCodeScannerScreen from './QRCodeScan';
 import Home from './HomeScreen';
+import Message from './MessageScreen';
 
 
 
 const AppNav = StackNavigator({
-  Home: { screen: SplashScreen },
-  QRCodeDisplay: { screen: QRCodeDisplay },
+  Home: { screen: Home },
+  // Home: { screen: SplashScreen },
+  AddContact: { screen: AddContact },
   QRCodeScanner: { screen: QRCodeScannerScreen },
-  NewHome: { screen: Home },
+  Message: { screen: Message },
   
 });
 
