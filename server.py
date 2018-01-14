@@ -122,7 +122,7 @@ def transactions_since(index):
 
 @app.route('/transactions/init', methods=['GET'])
 def tranactions_init():
-    return blockchain.curr_chain_index
+    return jsonify(blockchain.curr_chain_index)
 
 
 if __name__ == '__main__':
