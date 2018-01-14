@@ -51,29 +51,30 @@ export default class SplashScreen extends Component {
      console.log(a);
      var serSec = a.SerializeSecretKey();
      var serPub = a.SerializePublicKey();
-    //  var check = a.UnserializePublicKey(serPub);
-    AsyncStorage.setItem('serPub', serPub);
-    AsyncStorage.setItem('serSec', serSec);
+     AsyncStorage.setItem('serPub', serPub);
+     AsyncStorage.setItem('serSec', serSec);
   }
 
 
   render() {
     if (this.state.isLoading) {
       return (
-        <View style={{flex: 1 }}>
-          <StatusBar style={styles.StatusBarColor} />
-          <ActivityIndicator />
+        <View style={styles.container}>
+          <Text style={styles.splashText}>
+            Soteria
+          </Text>
         </View>
       );
     }
-
-    return(
+    return (
       <View style={styles.container}>
         <Text style={styles.splashText}>
           Soteria
         </Text>
       </View>
-    )
+    );
+
+
   }
 
 }
