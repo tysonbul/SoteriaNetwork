@@ -3,7 +3,7 @@ var sjcl = require('./sjcl.js')
 
 // Generate a new pub/sec key pair, only called once
 function KeyPair(){
-    var pair = sjcl.ecc.elGamal.generateKeys(256)
+    var pair = sjcl.ecc.elGamal.generateKeys(sjcl.ecc.curves.k256)
     this.pair = pair;
     this.userDict = [];
 }
@@ -55,33 +55,30 @@ KeyPair.prototype.SendMsg = function(msg, pub){
 
 // Serialize public key
 KeyPair.prototype.SerializePublicKey = function(){
-  pub = this.pair.pub.get();
-  console.log(pub);
+  var pub = this.pair.pub.get();
   return sjcl.codec.base64.fromBits(pub.x.concat(pub.y));
 }
 
 // Unserialized public key
 KeyPair.prototype.UnserializePublicKey = function(pub){
   return new sjcl.ecc.elGamal.publicKey(
-    sjcl.ecc.curves.c256,
+    sjcl.ecc.curves.k256,
     sjcl.codec.base64.toBits(pub)
 )
 }
 
 // Serialize public key
 KeyPair.prototype.SerializeSecretKey = function(){
-  return sjcl.codec.base64.fromBits(this.pair.sec)
+  var sec = this.pair.sec.get();
+  return sjcl.codec.base64.fromBits(sec)
 }
 
 // Unserialized public key
 KeyPair.prototype.UnserializeSecretKey = function(sec){
   return new sjcl.ecc.elGamal.secretKey(
-    sjcl.ecc.curves.c256,
-    sjcl.ecc.curves.c256.field.fromBits(sjcl.codec.base64.toBits(sec))
+    sjcl.ecc.curves.k256,
+    sjcl.ecc.curves.k256.field.fromBits(sjcl.codec.base64.toBits(sec))
 )
 }
 
 module.exports = KeyPair;
-
-var a = new KeyPair();
-console.log(a)

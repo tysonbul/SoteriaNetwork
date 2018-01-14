@@ -25,23 +25,35 @@ export default class SplashScreen extends Component {
   };
 
   componentDidMount(){
+    this.fetchKeys();
+  }
+
+  async fetchKeys(){
+    try{
+      const serPub = await AsyncStorage.getItem('serPub');
+      const serSec = await AsyncStorage.getItem('serSec');
+      console.log(serPub);
+      console.log(serSec);
+      if(serPub == null || serSec == null){
+        this.GenerateKey();
+      }
+    }catch(error){};
+
     this.setState({
       isLoading: false
     })
   }
 
+
+
   GenerateKey(){
      var a = new KeyPair();
      console.log(a);
-     var serPub = a.SerializeSecretKey();
-     var serSec = a.SerializePublicKey();
-     console.log(serPub);
-    // JSON.stringify(safeObject(obj));
-    // deJSON = JSON.parse(obj)
-    // console.log(deJSON)
-    // console.log(a === deJSON)
-    // AsyncStorage.setItem('keyPair', obj)
-    // fetched = AsyncStorage.getItem('keyPair');
+     var serSec = a.SerializeSecretKey();
+     var serPub = a.SerializePublicKey();
+    //  var check = a.UnserializePublicKey(serPub);
+    AsyncStorage.setItem('serPub', serPub);
+    AsyncStorage.setItem('serSec', serSec);
   }
 
 
@@ -60,11 +72,6 @@ export default class SplashScreen extends Component {
         <Text style={styles.splashText}>
           Soteria
         </Text>
-        <Button
-          onPress={this.GenerateKey.bind(this)}
-          title="Generate Public Key"
-        />
-
       </View>
     )
   }
