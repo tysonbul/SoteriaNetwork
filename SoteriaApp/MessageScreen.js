@@ -14,6 +14,8 @@ import {
     StatusBar
 } from 'react-native';
 
+import {server_address} from './App';
+
 export default class Message extends Component {
     
     static navigationOptions = ({ navigation }) =>{
@@ -25,6 +27,13 @@ export default class Message extends Component {
     
     constructor(props) {
         super(props);
+        this.state = {
+          isLoading: true,
+          errorMsg: '',
+          error: false
+        }
+
+        
         // let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         // this.state = {
         //     showAllCoins: false,
@@ -32,6 +41,10 @@ export default class Message extends Component {
         //     dataSource: ds.cloneWithRows(['hi', 'hello'])
         //   };
     };
+
+    fetchMessages(){
+
+    }
 
     // _addContact = (publickey) => {
     //     this.props.navigation.navigate('QRCodeDisplay', publickey);
