@@ -8,6 +8,8 @@ import KeyPair from './crypt';
 // var safeObject = require('safeObject')
 
 
+
+
 export default class SplashScreen extends Component {
 
   static navigationOptions = ({ navigation }) =>{
@@ -30,12 +32,13 @@ export default class SplashScreen extends Component {
 
   async fetchKeys(){
     try{
-      const serPub = await AsyncStorage.getItem('serPub');
-      const serSec = await AsyncStorage.getItem('serSec');
+      const serPub = null;
+      const serSec = null;
+      const uuid = null;
       console.log(serPub);
       console.log(serSec);
-      if(serPub == null || serSec == null){
-        this.GenerateKey();
+      if(serPub == null || serSec == null || uuid == null){
+        this.GenerateUser();
 
       }
     }catch(error){};
@@ -45,13 +48,15 @@ export default class SplashScreen extends Component {
 
 
 
-  GenerateKey(){
+  GenerateUser(){
      var a = new KeyPair();
-     console.log(a);
+     console.log(a.userDict)
      var serSec = a.SerializeSecretKey();
      var serPub = a.SerializePublicKey();
      AsyncStorage.setItem('serPub', serPub);
      AsyncStorage.setItem('serSec', serSec);
+     AsyncStorage.setItem('uuid', a.uuid);
+     AsyncStorage.setItem('userDict', a.userDict);
   }
 
 

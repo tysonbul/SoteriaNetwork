@@ -36,18 +36,20 @@ export default class Home extends Component {
         let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             showAllCoins: false,
-            isLoading: false,
-            dataSource: ds.cloneWithRows(['hi', 'hello'])
+            isLoading: true,
+            dataSource: ds.cloneWithRows(['hi', 'hello']),
+            serPub: null,
+            serSec: null,
+            uuid: null,
           };
     };
 
     _getSerializedPublicKey(){
-      /* Add code to get serialized public key from storage*/
-      return '0xf2369873297856';
+      return this.state.serPub;
     }
 
     _addContact = (publickey) => {
-        this.props.navigation.navigate('AddContact', this._getSerializedPublicKey());
+        this.props.navigation.navigate('AddContact', this._getSerializedPublicKey(), );
       }
 
     _goToMessages(){
@@ -56,10 +58,40 @@ export default class Home extends Component {
 
     componentDidMount() {
         this.props.navigation.setParams({ addContact: this._addContact.bind(this) });
+        this.fetchKeys();
       };
+
+      async fetchKeys(){
+        try{
+          const serPub = await AsyncStorage.getItem('serPub');
+          const serSec = await AsyncStorage.getItem('serSec');
+          const uuid = await AsyncStorage.getItem('uuid');
+          const userDict = await AsyncStorage.getItem('userDict');
+          console.log(serPub);
+          console.log(serSec);
+          this.setState({
+            serPub: serPub,
+            serSec: serSec,
+            uuid: uuid,
+            userDict: userDict,
+            isLoading: false
+          })
+        }catch(error){};
+
+      }
 
     render() {
         const { navigate } = this.props.navigation;
+
+        if (this.state.isLoading) {
+          return (
+            <View style={{flex: 1}}>
+              <Text>Loading</Text>
+            </View>
+          );
+        }
+
+
         return (
           <View style={{flex: 1}}>
             <StatusBar style={styles.StatusBarColor}/>

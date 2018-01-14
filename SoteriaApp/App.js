@@ -9,6 +9,13 @@ import QRCodeScannerScreen from './QRCodeScan';
 import Home from './HomeScreen';
 import Message from './MessageScreen';
 
+import {createStore, applyMiddleware} from 'redux';
+import { Provider, connect } from 'react-redux'
+
+
+
+
+
 
 
 const AppNav = StackNavigator({

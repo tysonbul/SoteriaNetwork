@@ -1,18 +1,19 @@
 'use strict';
- 
+
 import React, { Component } from 'react';
 import QRCode from 'react-native-qrcode';
 import {StackNavigator, NavigationActions} from 'react-navigation';
- 
+
 import {
     AppRegistry,
     StyleSheet,
     View,
     TextInput,
     Text,
-    Button
+    Button,
+    AsyncStorage
 } from 'react-native';
- 
+
 export default class AddContact extends Component {
 
     static navigationOptions = ({ navigation }) => ({
@@ -22,6 +23,7 @@ export default class AddContact extends Component {
   constructor(props) {
     super(props);
     this.qrcodevalue = props.navigation.state.params;
+    console.log(this.qrcodevalue);
     this.state = {
         contactName: '',
         contactAddress: ''
@@ -29,7 +31,7 @@ export default class AddContact extends Component {
   };
 
   _unserializePublicKey(data){
-    /* To be filled in with serialization code*/ 
+    /* To be filled in with serialization code*/
     return data
   }
 
@@ -39,16 +41,45 @@ export default class AddContact extends Component {
 
   saveContactInfo(){
     /* Add code that saves the contact info */
-    contactName = this.state.contactName;
-    contactAddress = this.state.contactAddress;
-    // however you save the values...
-    
+    console.log(this.state);
+    let contactName = this.state.contactName;
+    let contactAddress = this.state.contactAddress;
+
+    let user = {contactName: contactAddress}
+    this.saveUserDict(user);
+
+
+  }
+
+  async saveUserDict(newUser){
+    try{
+      var userDict = await AsyncStorage.getItem('userDict');
+      console.log(userDict)
+      userDict.push(newUser);
+      AsyncStorage.setItem('userDict', userDict);
+    }catch(error){
+      console.log(error)
+    }
+
+    // Go back to home screen after success
+    this.toHomeScreen();
+
+  }
+
+  toHomeScreen = () => {
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({ routeName: 'Home'})
+      ]
+    })
+    this.props.navigation.dispatch(resetAction)
   }
 
   _scanQR(){
     this.props.navigation.navigate('QRCodeScanner', { onSelect: this.onSelect });
   }
- 
+
   render() {
     return (
       <View style={styles.container}>
@@ -59,7 +90,7 @@ export default class AddContact extends Component {
                 value={this.state.contactName}
                 onChangeText={(text)=>{this.setState({contactName:text})}}
             />
-            <View style={{flexDirection:'row'}}> 
+            <View style={{flexDirection:'row'}}>
                 <TextInput
                 style={{minWidth:200}}
                     placeholder='Address (Scan QR Code)'
@@ -83,16 +114,16 @@ export default class AddContact extends Component {
           style={{paddingBottom:10, paddingTop:10}}
           >
           Have your new contact scan this QR Code</Text>
-          <Button 
+          <Button
             title='Add Contact'
             disabled={this.state.contactAddress == ''}
-            onPress={()=>{this.saveContactInfo.bind(this)}}
+            onPress={this.saveContactInfo.bind(this)}
           />
       </View>
     );
   };
 }
- 
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -100,7 +131,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
- 
+
     // input: {
     //     height: 40,
     //     borderColor: 'gray',
