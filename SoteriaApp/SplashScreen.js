@@ -37,6 +37,20 @@ export default class SplashScreen extends Component {
     this.props.navigation.navigate('FaceDetection')
   }
 
+  createPersonGroup = () =>  {
+    this.props.navigation.navigate('PersonGroup')
+  }
+
+  guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+      s4() + '-' + s4() + s4() + s4();
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -59,6 +73,10 @@ export default class SplashScreen extends Component {
         <Button
           onPress={this.detectFace.bind(this)}
           title="Detect face"
+        />
+        <Button
+          onPress={this.createPersonGroup.bind(this)}
+          title="Create face recognition profile"
         />
 
       </View>
