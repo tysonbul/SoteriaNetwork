@@ -14,7 +14,8 @@ const AppNav = StackNavigator({
   Home: { screen: SplashScreen },
   QRCodeDisplay: { screen: QRCodeDisplay },
   QRCodeScanner: { screen: QRCodeScannerScreen },
-  NewHome: { screen: Home }
+  NewHome: { screen: Home },
+  
 });
 
 
