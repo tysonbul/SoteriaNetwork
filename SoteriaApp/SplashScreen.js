@@ -1,9 +1,11 @@
 import React, { Component, } from 'react';
-import { StyleSheet, TouchableHighlight, ActivityIndicator, ListView, Text, View, StatusBar, Button, TextInput } from 'react-native';
+import { AsyncStorage, StyleSheet, TouchableHighlight, ActivityIndicator, ListView, Text, View, StatusBar, Button, TextInput } from 'react-native';
 import {StackNavigator, NavigationActions} from 'react-navigation';
 import styles from './styles';
-import KeyPair from './crypt'
-
+import KeyPair from './crypt';
+// import CacheStore from 'react-native-cache-store';
+// import store from 'react-native-simple-store';
+// var safeObject = require('safeObject')
 
 
 export default class SplashScreen extends Component {
@@ -29,7 +31,14 @@ export default class SplashScreen extends Component {
   }
 
   GenerateKey(){
-
+     var a = new KeyPair();
+     console.log(a);
+    // JSON.stringify(safeObject(obj));
+    // deJSON = JSON.parse(obj)
+    // console.log(deJSON)
+    // console.log(a === deJSON)
+    // AsyncStorage.setItem('keyPair', obj)
+    // fetched = AsyncStorage.getItem('keyPair');
   }
 
 

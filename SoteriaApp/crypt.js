@@ -1,4 +1,4 @@
-var sjcl = require('sjcl')
+var sjcl = require('./sjcl.js')
 
 
 // Generate a new pub/sec key pair, only called once
