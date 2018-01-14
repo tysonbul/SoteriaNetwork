@@ -12,7 +12,8 @@ import {
     ListView,
     TouchableHighlight,
     StatusBar,
-    ActivityIndicator
+    ActivityIndicator,
+    KeyboardAvoidingView
 } from 'react-native';
 
 import {server_address} from './App';
@@ -130,7 +131,7 @@ export default class Message extends Component {
       }
 
       return (
-        <View style={{flex:1}}>
+        <KeyboardAvoidingView style={{flex:1}} behavior="padding">
         <View style={{flex: 1}}>
           <StatusBar style={styles.StatusBarColor}/>
           <ListView
@@ -140,14 +141,14 @@ export default class Message extends Component {
             renderRow={(rowData) =>
               <View style={styles.buttonWrapper}>
                 <TouchableHighlight underlayColor='#777' style={styles.button}>
-                  <Text style={styles.row}>{rowData.msg}{'\n'}Available: {rowData.msg}</Text>
+                  <Text style={styles.row}>{rowData.msg}</Text>
                 </TouchableHighlight>
               </View>}
           />
         </View>
-        <View style={{flexDirection:'row', alignSelf: "stretch"}}> 
+        <View style={{flexDirection:'row', alignSelf: "stretch", paddingBottom:10}}> 
             <TextInput
-                style={{minWidth:300, borderWidth:1}}
+                style={{width:300, borderWidth:1}}
                 placeholder='Aa'
                 placeholderTextColor='grey'
                 value={this.state.newMessage}
@@ -159,7 +160,7 @@ export default class Message extends Component {
             style={{alignSelf:'right'}}
             />
         </View>
-        </View>
+        </KeyboardAvoidingView>
       );
     }
 }
