@@ -11,20 +11,34 @@ import {
     Button,
     ListView,
     TouchableHighlight,
-    StatusBar
+    StatusBar,
+    ActivityIndicator,
+    KeyboardAvoidingView
 } from 'react-native';
+
+import {server_address} from './App';
 
 export default class Message extends Component {
     
     static navigationOptions = ({ navigation }) =>{
         const { params = {} } = navigation.state;
         return {
-            title: 'Contact Name'
+            title: params
             }
     }
     
     constructor(props) {
         super(props);
+        this.state = {
+          isLoading: true,
+          errorMsg: '',
+          error: false,
+          newMessage: '',
+          listHeight: 0,
+          scrollViewHeight: 0
+        }
+
+        
         // let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         // this.state = {
         //     showAllCoins: false,
@@ -32,6 +46,36 @@ export default class Message extends Component {
         //     dataSource: ds.cloneWithRows(['hi', 'hello'])
         //   };
     };
+
+    componentDidMount() {
+      return this.fetchMessages();
+    };
+
+    fetchMessages(){
+      fetch(server_address + '/transactions/since/0')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        // this.props.navigation.setParams({allCoins:true})
+        this.setState({
+          isLoading: false,
+          dataSource: ds.cloneWithRows(responseJson['msgs'])
+        }, function() {
+          // do something with new state
+          // this.listView ? this.listView.scrollToEnd() : ()=>null;
+        });
+        // TODO: Update the local index
+
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({
+          isLoading: false,
+          errorMsg: error.toString(),
+          error: true
+        });
+      });
+    }
 
     // _addContact = (publickey) => {
     //     this.props.navigation.navigate('QRCodeDisplay', publickey);
@@ -46,24 +90,79 @@ export default class Message extends Component {
     //     // return this.fetchPortfolio();
     //   };
 
+
+    _sendMessage(){
+      let message = this.state.newMessage;
+      fetch(server_address + '/transactions/new', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          msg: message
+        })
+      }).then(()=>{
+        fetch(server_address + '/mine')
+      }).then(this.fetchMessages.bind(this)).then(()=>{
+        this.setState({newMessage:''})
+      });
+    }
+
+
+    // componentDidUpdate(){
+    //   console.log('mlhadjfhaldskhlkjh');
+    //   this.listView.scrollToEnd()
+    // }
+
+    _scrollToBottom(){
+      this.listView.scrollToEnd();
+    }
+
     render() {
-        const { navigate } = this.props.navigation;
+      const { navigate } = this.props.navigation;
+      if (this.state.isLoading) {
         return (
-            <View/>
-        //   <View style={{flex: 1}}>
-        //     <StatusBar style={styles.StatusBarColor}/>
-        //     <ListView
-        //     dataSource={this.state.dataSource}
-        //       renderRow={(rowData) =>
-        //         <View style={styles.buttonWrapper}>
-        //           <TouchableHighlight underlayColor='#777' onPress={this._goToMessages.bind(this)} style={styles.button}>
-        //             <Text style={styles.row}>{rowData}{'\n'}Available: {rowData}</Text>
-        //           </TouchableHighlight>
-        //         </View>}
-        //     />
-        //   </View>
+          <View style={{flex: 1 }}>
+            <StatusBar style={styles.StatusBarColor} />
+            <ActivityIndicator />
+          </View>
         );
       }
+
+      return (
+        <KeyboardAvoidingView style={{flex:1}} behavior="padding">
+        <View style={{flex: 1}}>
+          <StatusBar style={styles.StatusBarColor}/>
+          <ListView
+            ref={listView => { this.listView = listView; }}
+            onEndReached={this._scrollToBottom.bind(this)}
+            dataSource={this.state.dataSource}
+            renderRow={(rowData) =>
+              <View style={styles.buttonWrapper}>
+                <TouchableHighlight underlayColor='#777' style={styles.button}>
+                  <Text style={styles.row}>{rowData.msg}</Text>
+                </TouchableHighlight>
+              </View>}
+          />
+        </View>
+        <View style={{flexDirection:'row', alignSelf: "stretch", paddingBottom:10}}> 
+            <TextInput
+                style={{width:300, borderWidth:1}}
+                placeholder='Aa'
+                placeholderTextColor='grey'
+                value={this.state.newMessage}
+                onChangeText={(text)=>{this.setState({newMessage:text})}}
+            />
+            <Button
+            title="Send"
+            onPress={this._sendMessage.bind(this)}
+            style={{alignSelf:'right'}}
+            />
+        </View>
+        </KeyboardAvoidingView>
+      );
+    }
 }
 
 
@@ -74,7 +173,9 @@ const styles = StyleSheet.create({
   
     row: {
       color: 'black',
-      textAlign: 'center'
+      textAlign: 'left',
+      alignSelf: 'stretch',
+      paddingLeft:20
     },
   
     buttonWrapper: {

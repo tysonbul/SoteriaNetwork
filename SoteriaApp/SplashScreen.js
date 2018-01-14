@@ -84,8 +84,16 @@ export default class SplashScreen extends Component {
   }
 
 
+  // detectFace = () => {
+  //   this.props.navigation.navigate('FaceDetection')
+  // }
+
+  // createPersonGroup = () =>  {
+  //   this.props.navigation.navigate('PersonGroup')
+  // }
+
+
   render() {
-    //if (this.state.isLoading) {
       return (
         <View style={{ flex: 1 }}>
        <View style={{ backgroundColor: 'rgba(51,255,186,1) ', flex: 1 }} />
@@ -105,9 +113,6 @@ export default class SplashScreen extends Component {
      </LinearGradient>
      </View>
       );
-    //}
-
-
   }
 
 }

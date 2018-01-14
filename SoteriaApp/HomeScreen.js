@@ -33,15 +33,21 @@ export default class Home extends Component {
 
     constructor(props) {
         super(props);
+        // console.log(contacts);
         let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             showAllCoins: false,
             isLoading: true,
-            dataSource: ds.cloneWithRows(['hi', 'hello']),
+            dataSource: ds.cloneWithRows([]),
             serPub: null,
             serSec: null,
             uuid: null,
           };
+        AsyncStorage.getItem('userDict').then((contacts) => {
+          let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+          console.log(JSON.parse(contacts));
+          this.setState({dataSource:ds.cloneWithRows(JSON.parse(contacts))})
+        });
     };
 
     _getSerializedPublicKey(){
@@ -52,8 +58,8 @@ export default class Home extends Component {
         this.props.navigation.navigate('AddContact', this._getSerializedPublicKey(), );
       }
 
-    _goToMessages(){
-      this.props.navigation.navigate('Message');
+    _goToMessages(contactName){
+      this.props.navigation.navigate('Message', contactName);
     }
 
     componentDidMount() {
@@ -100,8 +106,8 @@ export default class Home extends Component {
             dataSource={this.state.dataSource}
               renderRow={(rowData) =>
                 <View style={styles.buttonWrapper}>
-                  <TouchableHighlight underlayColor='#777' onPress={this._goToMessages.bind(this)} style={styles.button}>
-                    <Text style={styles.row}>{rowData}{'\n'}Available: {rowData}</Text>
+                  <TouchableHighlight underlayColor='#777' onPress={this._goToMessages.bind(this, rowData.contactName)} style={styles.button}>
+                    <Text style={styles.row}>{rowData.contactName}</Text>
                   </TouchableHighlight>
                 </View>}
             />
