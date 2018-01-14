@@ -8,15 +8,6 @@ function KeyPair(){
     this.userDict = [];
 }
 
-// Serialize public key
-KeyPair.prototype.SerializePublicKey = function(pub){
-  pub = sjcl.codec.base64.fromBits(pub.x.concat(pub.y));
-}
-
-// Unserialized public key
-KeyPair.prototype.UnserializePublicKey = function(pub){
-  pub = sjcl.codec.base64.fromBits(pub.x.concat(pub.y));
-}
 
 // Encrypt and send message using receivers pub key
 KeyPair.prototype.EncryptMsg = function(msg, pub){
@@ -64,13 +55,15 @@ KeyPair.prototype.SendMsg = function(msg, pub){
 
 // Serialize public key
 KeyPair.prototype.SerializePublicKey = function(){
-  return sjcl.codec.base64.fromBits(this.pair.pub.x.concat(this.pair.pub.y));
+  pub = this.pair.pub.get();
+  console.log(pub);
+  return sjcl.codec.base64.fromBits(pub.x.concat(pub.y));
 }
 
 // Unserialized public key
 KeyPair.prototype.UnserializePublicKey = function(pub){
   return new sjcl.ecc.elGamal.publicKey(
-    sjcl.ecc.curves.c256, 
+    sjcl.ecc.curves.c256,
     sjcl.codec.base64.toBits(pub)
 )
 }
