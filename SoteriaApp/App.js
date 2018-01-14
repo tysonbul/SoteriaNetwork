@@ -9,7 +9,7 @@ import QRCodeScannerScreen from './QRCodeScan';
 import Home from './HomeScreen';
 import Message from './MessageScreen';
 
-export const server_address = 'http://10.110.26.134:5000';
+export const server_address = 'http://10.110.26.134:5001';
 
 const AppNav = StackNavigator({
   Home: { screen: Home },
