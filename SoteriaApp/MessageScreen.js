@@ -173,7 +173,9 @@ const styles = StyleSheet.create({
   
     row: {
       color: 'black',
-      textAlign: 'center'
+      textAlign: 'left',
+      alignSelf: 'stretch',
+      paddingLeft:20
     },
   
     buttonWrapper: {
