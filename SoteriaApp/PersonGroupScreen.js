@@ -1,17 +1,13 @@
 import React, { Component, } from 'react';
-import { StyleSheet, TouchableHighlight, TouchableOpacity, ActivityIndicator, ListView, Text, View, StatusBar, Button, TextInput, CameraRoll, ScrollView, Slider, Vibration } from 'react-native';
+import { StyleSheet, TouchableHighlight, TouchableOpacity, ActivityIndicator, ListView, Text, View, StatusBar, Button, TextInput, CameraRoll, ScrollView, Slider, Vibration, AsyncStorage } from 'react-native';
 import {StackNavigator, NavigationActions} from 'react-navigation';
 import styles from './styles';
 import { Constants, Camera, FileSystem, Permissions, takeSnapshotAsync } from 'expo';
-import {uuid} from './App';
+// import {uuid} from './App';
 
 import { MICROSOFT_KEY } from './config'
 
 const landmarkSize = 2;
-const endpoint = "https://westcentralus.api.cognitive.microsoft.com/face/v1.0";
-const key1 = "2b6eb38dbc4744db9b0b13cce8d36449";
-const key2 = "26e20ee52db64acb82339b62cf926939";
-
 
 const flashModeOrder = {
     off: 'on',
@@ -137,6 +133,9 @@ export default class PersonGroup extends Component {
     //     }
     //   }
 
+    // uuid = AsyncStorage.getItem('uuid');
+    
+
     state = {
         flash: 'off',
         zoom: 0,
@@ -151,7 +150,7 @@ export default class PersonGroup extends Component {
         photos: [],
         faces: [],
         permissionsGranted: false,
-        personGroupName: uuid,
+        personGroupName: AsyncStorage.getItem('uuid'),
         personId: ''
     };
     

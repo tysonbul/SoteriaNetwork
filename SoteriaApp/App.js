@@ -12,21 +12,21 @@ import Home from './HomeScreen';
 import Message from './MessageScreen';
 
 export const server_address = 'http://10.110.26.134:5001';
-import {createStore, applyMiddleware} from 'redux';
-import { Provider, connect } from 'react-redux'
+// import {createStore, applyMiddleware} from 'redux';
+// import { Provider, connect } from 'react-redux'
 
-function guid() {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000)
-      .toString(16)
-      .substring(1);
-  };
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-    s4() + '-' + s4() + s4() + s4();
-};
+// function guid() {
+//   function s4() {
+//     return Math.floor((1 + Math.random()) * 0x10000)
+//       .toString(16)
+//       .substring(1);
+//   };
+//   return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+//     s4() + '-' + s4() + s4() + s4();
+// };
 
-export const uuid = guid()
-console.log(uuid)
+// export const uuid = guid()
+// console.log(uuid)
 
 
 const AppNav = StackNavigator({

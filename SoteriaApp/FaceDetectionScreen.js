@@ -3,7 +3,7 @@ import { StyleSheet, TouchableHighlight, TouchableOpacity, ActivityIndicator, Li
 import {StackNavigator, NavigationActions} from 'react-navigation';
 import styles from './styles';
 import { Constants, Camera, FileSystem, Permissions, takeSnapshotAsync } from 'expo';
-import { uuid } from './App';
+// import { uuid } from './App';
 import { MICROSOFT_KEY } from './config'
 
 
@@ -79,6 +79,7 @@ const wbOrder = {
   };
 
 
+
 export default class FaceDetection extends Component {
 
     
@@ -132,6 +133,7 @@ export default class FaceDetection extends Component {
     //       );
     //     }
     //   }
+    uuid = AsyncStorage.getItem('uuid');
 
     state = {
         flash: 'off',
@@ -151,7 +153,7 @@ export default class FaceDetection extends Component {
     
       async componentWillMount() {
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-        console.log(uuid)
+        console.log(this.uuid)
 
         this.setState({ permissionsGranted: status === 'granted' });
       }
@@ -258,7 +260,7 @@ export default class FaceDetection extends Component {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    'personGroupId' : uuid,
+                    'personGroupId' : this.uuid,
                     "faceIds" : [faceId],
                 })
                 //body: Base64.convertToByteArray(photoData)
