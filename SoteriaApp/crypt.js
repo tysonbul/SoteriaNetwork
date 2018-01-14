@@ -5,7 +5,17 @@ var sjcl = require('./sjcl.js')
 function KeyPair(){
     var pair = sjcl.ecc.elGamal.generateKeys(256)
     this.pair = pair;
-    this.userDict = []
+    this.userDict = [];
+}
+
+// Serialize public key
+KeyPair.prototype.SerializePublicKey = function(pub){
+  pub = sjcl.codec.base64.fromBits(pub.x.concat(pub.y));
+}
+
+// Unserialized public key
+KeyPair.prototype.UnserializePublicKey = function(pub){
+  pub = sjcl.codec.base64.fromBits(pub.x.concat(pub.y));
 }
 
 // Encrypt and send message using receivers pub key
