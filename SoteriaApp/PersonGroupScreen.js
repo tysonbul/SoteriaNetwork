@@ -5,6 +5,8 @@ import styles from './styles';
 import { Constants, Camera, FileSystem, Permissions, takeSnapshotAsync } from 'expo';
 import {uuid} from './App';
 
+import { MICROSOFT_KEY } from './config'
+
 const landmarkSize = 2;
 const endpoint = "https://westcentralus.api.cognitive.microsoft.com/face/v1.0";
 const key1 = "2b6eb38dbc4744db9b0b13cce8d36449";
