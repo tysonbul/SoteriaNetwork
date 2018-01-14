@@ -10,51 +10,43 @@ function uuidv4() {
 
 // Generate a new pub/sec key pair, only called once
 function KeyPair(){
-    var pair = sjcl.ecc.elGamal.generateKeys(sjcl.ecc.curves.k256)
-    this.pair = pair;
+    var EncPair = sjcl.ecc.elGamal.generateKeys(256)
+    var SignPair = sjcl.ecc.ecdsa.generateKeys(256)
+    this.EncPair = EncPair;
+    this.SignPair = SignPair
     this.uuid = uuidv4();
     this.userDict = [];
 }
 
 
 // Encrypt and send message using receivers pub key
-KeyPair.prototype.EncryptMsg = function(msg, pub){
-    var encMsg = sjcl.encrypt(pub, msg);
-
-    return encMsg;
+function EncryptMsg(msg, pub){
+    return sjcl.encrypt(pub, msg);
 }
 
 // Decrypt and return message using senders sec key
-KeyPair.prototype.DecryptMsg = function(encMsg){
-    var msg = sjcl.decrypt(this.pair.sec,msg)
+KeyPair.prototype.DecryptMsg = function(encMsg, sec){
+    var msg = sjcl.decrypt(sec,encMsg)
 
     return msg;
 }
 
 // Sign a msg using senders private key
-KeyPair.prototype.SignMsg = function(msg){
-    var sigMsg = this.pair.sec.sign(sjcl.hash.sha256.hash(msg));
-
-    return sigMsg;
+function SignMsg(msg, SignSec){
+    return SignSec.sign(sjcl.hash.sha256.hash(msg));
 }
 
 // Verify a msg using receivers pub key
-KeyPair.prototype.VerifyMsg = function(msg){
-    var verMsg = pub.verify(sjcl.hash.sha256.hash(msg), sig)
+KeyPair.prototype.VerifyMsg = function(msg, SignPub){
+    var verMsg = SignPub.verify(sjcl.hash.sha256.hash(msg), sig)
 
     return verMsg;
 }
 
-// Add a user address + alias
-KeyPair.prototype.AddUser = function(pub, alias){
-    var user = {alias: pub};
-    this.userDict.push(user);
-}
-
 // Send a message to a receivers pub key
-KeyPair.prototype.SendMsg = function(msg, pub){
-    sigMsg = KeyPair.SignMsg(msg);
-    encMsg = KeyPair.EncryptMsg(msg, pub)
+KeyPair.prototype.SendMsg = function(msg, EncPub, SignSec){
+    sigMsg = SignMsg(msg, SignSec);
+    encMsg = EncryptMsg(sigMsg, EncPub)
 
     return encMsg;
 }
@@ -62,31 +54,58 @@ KeyPair.prototype.SendMsg = function(msg, pub){
 // SERIALIZATION //
 
 // Serialize public key
-KeyPair.prototype.SerializePublicKey = function(){
-  var pub = this.pair.pub.get();
+KeyPair.prototype.SerializeEncPublicKey = function(){
+  var pub = this.EncPair.pub.get();
+  return sjcl.codec.base64.fromBits(pub.x.concat(pub.y));
+}
+
+KeyPair.prototype.SerializeSignPublicKey = function(){
+  var pub = this.SignPair.pub.get();
   return sjcl.codec.base64.fromBits(pub.x.concat(pub.y));
 }
 
 // Unserialized public key
-KeyPair.prototype.UnserializePublicKey = function(pub){
+KeyPair.prototype.UnserializeEncPublicKey = function(pub){
   return new sjcl.ecc.elGamal.publicKey(
-    sjcl.ecc.curves.k256,
+    sjcl.ecc.curves.c256,
+    sjcl.codec.base64.toBits(pub)
+)
+}
+
+// Unserialized public key
+KeyPair.prototype.UnserializeSignPublicKey = function(pub){
+  return new sjcl.ecc.ecdsa.publicKey(
+    sjcl.ecc.curves.c256,
     sjcl.codec.base64.toBits(pub)
 )
 }
 
 // Serialize public key
-KeyPair.prototype.SerializeSecretKey = function(){
-  var sec = this.pair.sec.get();
+KeyPair.prototype.SerializeEncSecretKey = function(){
+  var sec = this.EncPair.sec.get();
   return sjcl.codec.base64.fromBits(sec)
 }
 
-// Unserialized public key
-KeyPair.prototype.UnserializeSecretKey = function(sec){
-  return new sjcl.ecc.elGamal.secretKey(
-    sjcl.ecc.curves.k256,
-    sjcl.ecc.curves.k256.field.fromBits(sjcl.codec.base64.toBits(sec))
-)
+// Serialize public key
+KeyPair.prototype.SerializeSignSecretKey = function(){
+  var sec = this.SignPair.sec.get();
+  return sjcl.codec.base64.fromBits(sec);
 }
+
+// Unserialized public key
+KeyPair.prototype.UnserializeEncSecretKey = function(sec){
+  return new sjcl.ecc.elGamal.secretKey(
+      sjcl.ecc.curves.c256,
+      sjcl.ecc.curves.c256.field.fromBits(sjcl.codec.base64.toBits(sec))
+  )
+}
+
+KeyPair.prototype.UnserializeSignSecretKey = function(sec){
+  return new sjcl.ecc.ecdsa.secretKey(
+      sjcl.ecc.curves.c256,
+      sjcl.ecc.curves.c256.field.fromBits(sjcl.codec.base64.toBits(sec))
+  )
+}
+
 
 module.exports = KeyPair;

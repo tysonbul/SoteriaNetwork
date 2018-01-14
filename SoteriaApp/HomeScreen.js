@@ -14,6 +14,7 @@ import {
     StatusBar,
     AsyncStorage
 } from 'react-native';
+import KeyPair from './crypt';
 
 export default class Home extends Component {
 
@@ -51,15 +52,21 @@ export default class Home extends Component {
     };
 
     _getSerializedPublicKey(){
-      return this.state.serPub;
+      let enc = this.state.serEncPub;
+      let sign = this.state.serSignPub;
+
+      var ContactAddr = {"serEncPub": enc, "serSignPub": sign};
+      return JSON.stringify(ContactAddr);
     }
 
     _addContact = (publickey) => {
         this.props.navigation.navigate('AddContact', this._getSerializedPublicKey(), );
       }
 
-    _goToMessages(contactName){
-      this.props.navigation.navigate('Message', contactName);
+    _goToMessages(contactName, contactAddress){
+      let params = {"contactName": contactName, "contactAddress": contactAddress, "serEncSec": this.state.serEncSec, "serEncPub": this.state.serEncPub, "serSignSec": this.state.serSignSec, "serSignPub": this.state.serSignPub}
+      console.log(params);
+      this.props.navigation.navigate('Message', params);
     }
 
     componentDidMount() {
@@ -69,21 +76,30 @@ export default class Home extends Component {
 
       async fetchKeys(){
         try{
-          const serPub = await AsyncStorage.getItem('serPub');
-          const serSec = await AsyncStorage.getItem('serSec');
+          const serEncPub = await AsyncStorage.getItem('serEncPub');
+          const serEncSec = await AsyncStorage.getItem('serEncSec');
+
+          const serSignPub = await AsyncStorage.getItem('serSignPub');
+          const serSignSec = await AsyncStorage.getItem('serSignSec');
+
+
           const uuid = await AsyncStorage.getItem('uuid');
           const userArray = await AsyncStorage.getItem('userDict');
           let userDict = JSON.parse(userArray);
-          console.log(serPub);
-          console.log(serSec);
+          console.log(serSignPub);
+          console.log(serEncSec);
           this.setState({
-            serPub: serPub,
-            serSec: serSec,
+            serEncPub: serEncPub,
+            serEncSec: serEncSec,
+            serSignPub: serSignPub,
+            serSignSec: serSignSec,
             uuid: uuid,
             userDict: userDict,
             isLoading: false
           })
-        }catch(error){};
+        }catch(error){
+          console.log(error);
+        };
 
       }
 
@@ -106,7 +122,7 @@ export default class Home extends Component {
             dataSource={this.state.dataSource}
               renderRow={(rowData) =>
                 <View style={styles.buttonWrapper}>
-                  <TouchableHighlight underlayColor='#777' onPress={this._goToMessages.bind(this, rowData.contactName)} style={styles.button}>
+                  <TouchableHighlight underlayColor='#777' onPress={this._goToMessages.bind(this, rowData.contactName, rowData.contactAddress)} style={styles.button}>
                     <Text style={styles.row}>{rowData.contactName}</Text>
                   </TouchableHighlight>
                 </View>}

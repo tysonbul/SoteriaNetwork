@@ -1,5 +1,5 @@
 'use strict';
- 
+
 import React, { Component } from 'react';
 import {StackNavigator, NavigationActions} from 'react-navigation';
 'use strict';

@@ -43,7 +43,7 @@ export default class AddContact extends Component {
     /* Add code that saves the contact info */
     console.log(this.state);
     let contactName = this.state.contactName;
-    let contactAddress = this.state.contactAddress;
+    let contactAddress = JSON.parse(this.state.contactAddress);
 
     let user = {
       "contactName": contactName,

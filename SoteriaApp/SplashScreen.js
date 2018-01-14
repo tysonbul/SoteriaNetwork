@@ -39,22 +39,23 @@ export default class SplashScreen extends Component {
 
   async fetchKeys(){
     try{
-      let keys = ['serPub','serSec', 'uuid', 'userDict'];
+      let keys = ['serEncPub', 'serSignPub', 'serEncSec', 'serSignSec', 'uuid', 'userDict'];
       await AsyncStorage.multiRemove(keys,(error)=>{
         console.log("clear error");
         console.log(error);
       });
-      const serPub = await AsyncStorage.getItem('serPub');
-      const serSec = await AsyncStorage.getItem('serSec');
+      const serEncPub = await AsyncStorage.getItem('serEncPub');
+      const serSignSec = await AsyncStorage.getItem('serSignSec');
       const uuid = await AsyncStorage.getItem('uuid');
-      console.log(serPub);
-      console.log(serSec);
-      if(serPub == null || serSec == null || uuid == null){
+      console.log(serEncPub);
+      console.log(serSignSec);
+      if(serEncPub == null || serSignSec == null || uuid == null){
         this.GenerateUser();
 
       }
-    }catch(error){};
-
+    }catch(error){
+      console.log(error);
+    };
     this.toHomeScreen();
   }
 
@@ -62,12 +63,20 @@ export default class SplashScreen extends Component {
 
   GenerateUser(){
      var a = new KeyPair();
-     console.log(a.userDict);
-     var serSec = a.SerializeSecretKey();
-     var serPub = a.SerializePublicKey();
+     console.log(a);
+     var serEncSec = a.SerializeEncSecretKey();
+     var serEncPub = a.SerializeEncPublicKey();
+     console.log(serEncSec);
+     var serSignSec = a.SerializeSignSecretKey();
+     var serSignPub = a.SerializeSignPublicKey();
+     console.log(serSignSec);
      var userArray = JSON.stringify(a.userDict);
-     AsyncStorage.setItem('serPub', serPub);
-     AsyncStorage.setItem('serSec', serSec);
+     AsyncStorage.setItem('serEncPub', serEncPub);
+     AsyncStorage.setItem('serEncSec', serEncSec);
+
+     AsyncStorage.setItem('serSignPub', serSignPub);
+     AsyncStorage.setItem('serSignSec', serSignSec);
+
      AsyncStorage.setItem('uuid', a.uuid);
      AsyncStorage.setItem('userDict', userArray);
   }
