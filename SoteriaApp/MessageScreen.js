@@ -103,7 +103,9 @@ export default class Message extends Component {
         })
       }).then(()=>{
         fetch(server_address + '/mine')
-      }).then(this.fetchMessages.bind(this));
+      }).then(this.fetchMessages.bind(this)).then(()=>{
+        this.setState({newMessage:''})
+      });
     }
 
 
