@@ -83,7 +83,13 @@ const wbOrder = {
 export default class FaceDetection extends Component {
 
   takeMeHome = () => {
-    this.props.navigation.navigate('Home');
+      const resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({ routeName: 'Home'})
+        ]
+      })
+      this.props.navigation.dispatch(resetAction);
   }
     // state = {
     //     hasCameraPermission: null,
@@ -159,6 +165,22 @@ export default class FaceDetection extends Component {
         }); 
         this.setState({ permissionsGranted: status === 'granted' });
       }
+
+      _handleFaceScan = result => {
+        const { navigation } = this.props;
+        const backAction = NavigationActions.back({
+          key: null
+        })
+        
+        if (result) {
+          navigation.dispatch(backAction);
+          this.props.navigation.navigate('Home');
+
+        }
+        else {
+          navigation.state.params.onSelect({ passedScan: result });
+        }
+      };
     
       getRatios = async () => {
         const ratios = await this.camera.getSupportedRatios();
@@ -265,8 +287,11 @@ export default class FaceDetection extends Component {
           console.log(responseJsonIdentify);
           for (var i=0; i<responseJsonIdentify.length; i++) {
             if (responseJsonIdentify[i]['candidates'].length > 0) {
-               this.takeMeHome();
-               return;
+               this._handleFaceScan(true)
+               break;
+              //  return;
+            }else{
+              this._handleFaceScan(false)
             }
           }
 

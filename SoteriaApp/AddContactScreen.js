@@ -67,8 +67,21 @@ export default class AddContact extends Component {
     }
 
     // Go back to home screen after success
-    this.toHomeScreen();
+    //this.toHomeScreen();
+    //this.backHome();
+    this.props.navigation.navigate('Home');
 
+    //this.toHomeScreen();
+  }
+
+
+  backHome = () => {
+     const backAction = NavigationActions.back({
+       key: null
+     })
+    
+      navigation.dispatch(backAction);
+      
   }
 
   toHomeScreen = () => {

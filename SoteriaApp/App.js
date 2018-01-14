@@ -10,6 +10,7 @@ import AddContact from './AddContactScreen';
 import QRCodeScannerScreen from './QRCodeScan';
 import Home from './HomeScreen';
 import Message from './MessageScreen';
+import Settings from './SettingsScreen';
 
 export const server_address = 'http://10.110.0.129:5001';
 // import {createStore, applyMiddleware} from 'redux';
@@ -37,6 +38,7 @@ const AppNav = StackNavigator({
   Message: { screen: Message },
   FaceDetection: { screen: FaceDetection },
   PersonGroup: { screen: PersonGroup },
+  Settings: { screen: Settings }
 });
 
 export default class App extends React.Component {

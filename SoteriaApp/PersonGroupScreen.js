@@ -317,7 +317,7 @@ export default class PersonGroup extends Component {
   
             let responseJsonTrain = await responseTrain;
             console.log(responseJsonTrain)
-            AsyncStorage.setItem("enabled2FA", 'true');
+            AsyncStorage.setItem("enabled2FA", true);
             Alert.alert(
               'Success',
               'Image successfully saved!')

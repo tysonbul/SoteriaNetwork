@@ -21,13 +21,38 @@ export default class SplashScreen extends Component {
 
   constructor(props) {
     super(props);
+    console.log('Construvctor called again');
+    console.log(this.state)
     this.state = {
       isLoading: true,
     }
+    AsyncStorage.getItem("enabled2FA").then((enabled)=>{
+      if (enabled) {
+        console.log('going to face detect');
+        this._scanFace.bind(this)();
+      }else{
+        console.log("heading home the easy way")
+        this.toHomeScreen();
+      }
+    });
+    
   };
 
   componentDidMount(){
     this.fetchKeys();
+  }
+
+  onSelect = data => {
+    this.setState(data, ()=>{
+      if (this.state.passedScan){
+        console.log('going to home')
+        this.toHomeScreen();
+      }
+    });
+  };
+
+  _scanFace(){
+    this.props.navigation.navigate('FaceDetection', { onSelect: this.onSelect });
   }
 
   async fetchKeys(){
@@ -45,17 +70,18 @@ export default class SplashScreen extends Component {
       if(serPub == null || serSec == null || uuid == null){
         this.GenerateUser();
       }
-
-      const enabled2FA = await AsyncStorage.getItem("enabled2FA");
-      console.log("2FA VAR: " + enabled2FA);
-      if (enabled2FA != null) {
-        this.check2FA();
-        return;
-      }
+    
+      // const enabled2FA = await AsyncStorage.getItem("enabled2FA");
+      // console.log("2FA VAR: " + enabled2FA);
+      // if (enabled2FA) {
+      //   this._scanFace.bind(this)();
+      //   // this.check2FA();
+      //   return;
+      // }
 
     }catch(error){};
 
-    this.toHomeScreen();
+    // this.toHomeScreen();
   }
 
 
