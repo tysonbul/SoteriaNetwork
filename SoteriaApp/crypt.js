@@ -60,4 +60,35 @@ KeyPair.prototype.SendMsg = function(msg, pub){
     return encMsg;
 }
 
+// SERIALIZATION //
+
+// Serialize public key
+KeyPair.prototype.SerializePublicKey = function(){
+  return sjcl.codec.base64.fromBits(this.pair.pub.x.concat(this.pair.pub.y));
+}
+
+// Unserialized public key
+KeyPair.prototype.UnserializePublicKey = function(pub){
+  return new sjcl.ecc.elGamal.publicKey(
+    sjcl.ecc.curves.c256, 
+    sjcl.codec.base64.toBits(pub)
+)
+}
+
+// Serialize public key
+KeyPair.prototype.SerializeSecretKey = function(){
+  return sjcl.codec.base64.fromBits(this.pair.sec)
+}
+
+// Unserialized public key
+KeyPair.prototype.UnserializeSecretKey = function(sec){
+  return new sjcl.ecc.elGamal.secretKey(
+    sjcl.ecc.curves.c256,
+    sjcl.ecc.curves.c256.field.fromBits(sjcl.codec.base64.toBits(sec))
+)
+}
+
 module.exports = KeyPair;
+
+var a = new KeyPair();
+console.log(a)

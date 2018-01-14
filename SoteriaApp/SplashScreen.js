@@ -33,6 +33,9 @@ export default class SplashScreen extends Component {
   GenerateKey(){
      var a = new KeyPair();
      console.log(a);
+     var serPub = a.SerializeSecretKey();
+     var serSec = a.SerializePublicKey();
+     console.log(serPub);
     // JSON.stringify(safeObject(obj));
     // deJSON = JSON.parse(obj)
     // console.log(deJSON)
