@@ -19,16 +19,17 @@ export default class Home extends Component {
 
     static navigationOptions = ({ navigation }) =>{
         const { params = {} } = navigation.state;
-        headerLeft: null;
         return {
             title: 'Sorteria Messenger',
             headerRight: (<Button
-                onPress={params.addContact ? params.addContact : () => null}
-                title='Add Contact'
-                />)
+              onPress={params.addContact ? params.addContact : () => null}
+              title='Add Contact'
+              />),
+            headerLeft: (<Button
+              onPress={params.add2FA ? params.add2FA : () => null}
+              title='2FA'
+              />)
             }
-            headerLeft: null
-
     }
 
     constructor(props) {
@@ -55,15 +56,19 @@ export default class Home extends Component {
     }
 
     _addContact = (publickey) => {
-        this.props.navigation.navigate('AddContact', this._getSerializedPublicKey(), );
-      }
+      this.props.navigation.navigate('AddContact', this._getSerializedPublicKey(), );
+    }
+
+    _add2FA = (publickey) => {
+      this.props.navigation.navigate('PersonGroup');
+    }
 
     _goToMessages(contactName){
       this.props.navigation.navigate('Message', contactName);
     }
 
     componentDidMount() {
-        this.props.navigation.setParams({ addContact: this._addContact.bind(this) });
+        this.props.navigation.setParams({ addContact: this._addContact.bind(this), add2FA : this._add2FA.bind(this) });
         this.fetchKeys();
       };
 

@@ -1,5 +1,5 @@
 import React, { Component, } from 'react';
-import { StyleSheet, TouchableHighlight, TouchableOpacity, ActivityIndicator, ListView, Text, View, StatusBar, Button, TextInput, CameraRoll, ScrollView, Slider, Vibration, AsyncStorage } from 'react-native';
+import { Alert, StyleSheet, TouchableHighlight, TouchableOpacity, ActivityIndicator, ListView, Text, View, StatusBar, Button, TextInput, CameraRoll, ScrollView, Slider, Vibration, AsyncStorage } from 'react-native';
 import {StackNavigator, NavigationActions} from 'react-navigation';
 import styles from './styles';
 import { Constants, Camera, FileSystem, Permissions, takeSnapshotAsync } from 'expo';
@@ -150,13 +150,16 @@ export default class PersonGroup extends Component {
         photos: [],
         faces: [],
         permissionsGranted: false,
-        personGroupName: AsyncStorage.getItem('uuid'),
         personId: ''
     };
     
       async componentWillMount() {
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         console.log("CREATE PROFILE")
+        AsyncStorage.getItem('uuid').then((result) => {
+            this.setState({personGroupName: result})
+          }); 
+      
         this.setState({ permissionsGranted: status === 'granted' });
       }
     
@@ -297,6 +300,28 @@ export default class PersonGroup extends Component {
             });
 
           let responseJson = await response.json();
+          if (responseJson['error']) {
+            Alert.alert(
+              'Error',
+              'Unable to save image'
+            )
+          }
+          else {
+            let responseTrain = await fetch(
+              'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/persongroups/'+this.state.personGroupName+'/train', {
+                  method: 'POST',
+                  headers: {
+                      'Ocp-Apim-Subscription-Key':MICROSOFT_KEY
+                  }
+              });
+  
+            let responseJsonTrain = await responseTrain;
+            console.log(responseJsonTrain)
+            AsyncStorage.setItem("enabled2FA", 'true');
+            Alert.alert(
+              'Success',
+              'Image successfully saved!')
+          }
           console.log(responseJson);
 
         } catch (error) {
@@ -308,7 +333,7 @@ export default class PersonGroup extends Component {
       takePicture = async function() {
         if (this.camera) {
           this.camera.takePictureAsync({quality: 1, base64:true}).then(data => {
-            console.log(data.base64);
+            //console.log(data.base64);
              CameraRoll.saveToCameraRoll(data.uri, 'photo').then(newURI => {
                Vibration.vibrate();
             //   var nameOfPhoto = data.uri.split('/')[data.uri.split('/').length-1];

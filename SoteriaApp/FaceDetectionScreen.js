@@ -1,5 +1,5 @@
 import React, { Component, } from 'react';
-import { StyleSheet, TouchableHighlight, TouchableOpacity, ActivityIndicator, ListView, Text, View, StatusBar, Button, TextInput, CameraRoll, ScrollView, Slider, Vibration } from 'react-native';
+import { AsyncStorage, StyleSheet, TouchableHighlight, TouchableOpacity, ActivityIndicator, ListView, Text, View, StatusBar, Button, TextInput, CameraRoll, ScrollView, Slider, Vibration } from 'react-native';
 import {StackNavigator, NavigationActions} from 'react-navigation';
 import styles from './styles';
 import { Constants, Camera, FileSystem, Permissions, takeSnapshotAsync } from 'expo';
@@ -82,7 +82,9 @@ const wbOrder = {
 
 export default class FaceDetection extends Component {
 
-    
+  takeMeHome = () => {
+    this.props.navigation.navigate('Home');
+  }
     // state = {
     //     hasCameraPermission: null,
     //     type: Camera.Constants.Type.back,
@@ -133,7 +135,6 @@ export default class FaceDetection extends Component {
     //       );
     //     }
     //   }
-    uuid = AsyncStorage.getItem('uuid');
 
     state = {
         flash: 'off',
@@ -153,8 +154,9 @@ export default class FaceDetection extends Component {
     
       async componentWillMount() {
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-        console.log(this.uuid)
-
+        AsyncStorage.getItem('uuid').then((result) => {
+          this.setState({personGroupName: result})
+        }); 
         this.setState({ permissionsGranted: status === 'granted' });
       }
     
@@ -220,16 +222,7 @@ export default class FaceDetection extends Component {
       getMoviesFromApi = async function(photoData) {
         //   console.log(photoUri)
         //   console.log(photoName)
-        try {
-        // var photo = {
-        //     uri: photoUri,
-        //     type: 'image/jpeg',
-        //     name: photoName,
-        // };
-        //  var data = new FormData();
-        //  data.append('file ', photo);
-
-        
+        try {        
 
           let response = await fetch(
             'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect', {
@@ -260,7 +253,7 @@ export default class FaceDetection extends Component {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    'personGroupId' : this.uuid,
+                    'personGroupId' : this.state.personGroupName,
                     "faceIds" : [faceId],
                 })
                 //body: Base64.convertToByteArray(photoData)
@@ -268,7 +261,14 @@ export default class FaceDetection extends Component {
             });
 
           let responseJsonIdentify = await responseIdentify.json();
+
           console.log(responseJsonIdentify);
+          for (var i=0; i<responseJsonIdentify.length; i++) {
+            if (responseJsonIdentify[i]['candidates'].length > 0) {
+               this.takeMeHome();
+               return;
+            }
+          }
 
         } catch (error) {
           console.error(error);
@@ -279,13 +279,15 @@ export default class FaceDetection extends Component {
       takePicture = async function() {
         if (this.camera) {
           this.camera.takePictureAsync({quality: 1, base64:true}).then(data => {
-            console.log(data.base64);
-             CameraRoll.saveToCameraRoll(data.uri, 'photo').then(newURI => {
-               Vibration.vibrate();
+            //console.log(data.base64);
+             //CameraRoll.saveToCameraRoll(data.uri, 'photo').then(newURI => {
+               //Vibration.vibrate();
             //   var nameOfPhoto = data.uri.split('/')[data.uri.split('/').length-1];
             //   this.getMoviesFromApi(data.uri, nameOfPhoto);
-             });
+            Vibration.vibrate();
             this.getMoviesFromApi(data.base64);
+          });
+
             
         //     // console.log(data);
         //     // console.log(FileSystem.documentDirectory)
@@ -305,7 +307,6 @@ export default class FaceDetection extends Component {
         //   .catch((e) => {
         //     console.log(e, 'takePicture ERROR');
         //   });
-            }); 
         };
     };
 

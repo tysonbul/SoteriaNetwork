@@ -31,12 +31,12 @@ export default class SplashScreen extends Component {
   }
 
   async fetchKeys(){
-    try{
-      let keys = ['serPub','serSec', 'uuid', 'userDict'];
-      await AsyncStorage.multiRemove(keys,(error)=>{
-        console.log("clear error");
-        console.log(error);
-      });
+    try {
+      //let keys = ['serPub','serSec', 'userDict'];
+      // await AsyncStorage.multiRemove(keys,(error)=>{
+      //   console.log("clear error");
+      //   console.log(error);
+      // });
       const serPub = await AsyncStorage.getItem('serPub');
       const serSec = await AsyncStorage.getItem('serSec');
       const uuid = await AsyncStorage.getItem('uuid');
@@ -44,8 +44,15 @@ export default class SplashScreen extends Component {
       console.log(serSec);
       if(serPub == null || serSec == null || uuid == null){
         this.GenerateUser();
-
       }
+
+      const enabled2FA = await AsyncStorage.getItem("enabled2FA");
+      console.log("2FA VAR: " + enabled2FA);
+      if (enabled2FA != null) {
+        this.check2FA();
+        return;
+      }
+
     }catch(error){};
 
     this.toHomeScreen();
@@ -65,6 +72,11 @@ export default class SplashScreen extends Component {
      AsyncStorage.setItem('userDict', userArray);
   }
 
+  
+
+  check2FA = () => {
+    this.props.navigation.navigate('FaceDetection');
+  }
 
   toHomeScreen = () => {
     const resetAction = NavigationActions.reset({
@@ -75,6 +87,8 @@ export default class SplashScreen extends Component {
     })
     this.props.navigation.dispatch(resetAction)
   }
+
+
 
 
   // detectFace = () => {
