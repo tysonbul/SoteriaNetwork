@@ -20,11 +20,16 @@
   },
   "dependencies": {
     "expo": "^23.0.4",
-    "react": "16.0.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.2.0",
     "react-native": "0.50.3",
     "react-native-cache-store": "^1.0.2",
+    "react-native-camera": "^0.12.0",
+    "react-native-qrcode": "^0.2.6",
+    "react-native-qrcode-scanner": "0.0.29",
     "react-native-splash-screen": "^3.0.6",
     "react-navigation": "^1.0.0-beta.26",
+    "react-scripts": "^1.0.17",
     "sjcl": "^1.0.7"
   }
 }

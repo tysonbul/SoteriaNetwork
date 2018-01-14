@@ -28,6 +28,14 @@ export default class SplashScreen extends Component {
     })
   }
 
+  qrCodeDisplay = (publickey) => {
+    this.props.navigation.navigate('QRCodeDisplay', publickey);
+  }
+
+  qrCodeScanner = () => {
+    this.props.navigation.navigate('QRCodeScanner');
+  }
+
   GenerateKey(){
 
   }
@@ -52,6 +60,15 @@ export default class SplashScreen extends Component {
           onPress={this.GenerateKey.bind(this)}
           title="Generate Public Key"
         />
+        <Button
+          onPress={this.qrCodeDisplay.bind(this, 'http://localhost')}
+          title="Display QRCode"
+        />
+        <Button
+          onPress={this.qrCodeScanner.bind(this)}
+          title="Scan QRCode"
+        />
+
 
       </View>
     )
