@@ -18,6 +18,11 @@ import {
 import { BarCodeScanner, Permissions } from 'expo';
 
 export default class QRCodeScannerScreen extends Component {
+
+    static navigationOptions = ({ navigation }) => ({
+        title: 'Scan Contacts QR Code',
+     });
+
   state = {
     hasCameraPermission: null,
     lastScannedUrl: null,
@@ -35,10 +40,9 @@ export default class QRCodeScannerScreen extends Component {
   };
 
   _handleBarCodeRead = result => {
-    if (result.data !== this.state.lastScannedUrl) {
-      LayoutAnimation.spring();
-      this.setState({ lastScannedUrl: result.data });
-    }
+    const { navigation } = this.props;
+    navigation.goBack();
+    navigation.state.params.onSelect({ contactAddress: result.data });
   };
 
   render() {
@@ -59,53 +63,15 @@ export default class QRCodeScannerScreen extends Component {
                   }}
                 />}
 
-        {this._maybeRenderUrl()}
+        {/* {this._maybeRenderUrl()} */}
 
         <StatusBar hidden />
       </View>
     );
   }
 
-  _handlePressUrl = () => {
-    Alert.alert(
-      'Open this URL?',
-      this.state.lastScannedUrl,
-      [
-        {
-          text: 'Yes',
-          onPress: () => Linking.openURL(this.state.lastScannedUrl),
-        },
-        { text: 'No', onPress: () => {} },
-      ],
-      { cancellable: false }
-    );
-  };
-
   _handlePressCancel = () => {
     this.setState({ lastScannedUrl: null });
-  };
-
-  _maybeRenderUrl = () => {
-    if (!this.state.lastScannedUrl) {
-      return;
-    }
-
-    return (
-      <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.url} onPress={this._handlePressUrl}>
-          <Text numberOfLines={1} style={styles.urlText}>
-            {this.state.lastScannedUrl}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.cancelButton}
-          onPress={this._handlePressCancel}>
-          <Text style={styles.cancelButtonText}>
-            Cancel
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
   };
 }
 
