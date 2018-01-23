@@ -1,3 +1,9 @@
+"""
+Code originally based off Daniel van Flymen's article on hacker noon: "Learn BlockChains by Building One"
+
+    https://hackernoon.com/learn-blockchains-by-building-one-117428612f46
+"""
+
 import hashlib
 import json
 from textwrap import dedent
