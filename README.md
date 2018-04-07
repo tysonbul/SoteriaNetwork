@@ -19,8 +19,8 @@ Our biggest challenge came from the encryption/decryption process that we had to
 ## Accomplishments that we're proud of
 We are really proud of our blockchain for its simplicity, while taking on a huge challenge. We also really like all the features we managed to pack into our app. None of us had too much React experience but we think we managed to accomplish a lot given the time. We also all came out as good friends still, which is a big plus when we all really like to be right :)
 
-## What we learned
-Some of us learned our appreciation for React Native, while some learned the opposite. On top of that we learned so much about security, and cryptography, and furthered our beliefs in the power of decentralization.
+## What we learned 
+Some of us developed an appreciation for React Native while the others found it frustrating to use. We also learned about security methods involving cryptography and furthered our beliefs in the power of decentralization.
 
 ## What's next for The Soteria Network
 Once we have our main application built we plan to start working on the tokens and distribution. With a bit more work and adoption we will find ourselves in a very possible position to pursue an ICO. This would then enable us to further develop and enhance our protocol and messaging app. We see lots of potential in our creation and believe privacy and consensual communication is an essential factor in our ever increasingly social networking world.
